@@ -197,6 +197,17 @@ kubectl -n argocd-commenter-system rollout status deployment argocd-commenter-co
 
 ## Configuration
 
+### Disable the health comment
+
+By default, argocd-commenter creates a comment when an Application becomes healthy or degraded after a sync.
+If you need only the sync comments (syncing, synced and failed), set the environment variable `FEATURE_CREATE_HEALTH_COMMENT` to `false`.
+
+```yaml
+env:
+  - name: FEATURE_CREATE_HEALTH_COMMENT
+    value: "false"
+```
+
 ### GitHub Enterprise Server
 
 Set the environment variable `GITHUB_ENTERPRISE_URL`.

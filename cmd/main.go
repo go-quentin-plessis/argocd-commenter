@@ -204,13 +204,17 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&controller.ApplicationHealthCommentReconciler{
-		Client:       mgr.GetClient(),
-		Scheme:       mgr.GetScheme(),
-		Notification: notificationClient,
-	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "ApplicationHealthComment")
-		os.Exit(1)
+	if os.Getenv("FEATURE_CREATE_HEALTH_COMMENT") != "false" {
+		if err = (&controller.ApplicationHealthCommentReconciler{
+			Client:       mgr.GetClient(),
+			Scheme:       mgr.GetScheme(),
+			Notification: notificationClient,
+		}).SetupWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create controller", "controller", "ApplicationHealthComment")
+			os.Exit(1)
+		}
+	} else {
+		setupLog.Info("Health comment is disabled by FEATURE_CREATE_HEALTH_COMMENT")
 	}
 
 	if err = (&controller.ApplicationPhaseDeploymentReconciler{
